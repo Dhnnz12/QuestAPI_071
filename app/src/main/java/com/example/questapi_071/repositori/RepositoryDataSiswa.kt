@@ -1,6 +1,8 @@
 package com.example.questapi_071.repositori
 
+import com.example.questapi_071.apiservice.ServiceApiSiswa
 import com.example.questapi_071.modeldata.DataSiswa
+import retrofit2.Response
 
 interface RepositoryDataSiswa{
     suspend fun getDataSiswa(): List<DataSiswa>
