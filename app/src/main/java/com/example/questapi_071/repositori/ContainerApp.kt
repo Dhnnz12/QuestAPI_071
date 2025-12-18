@@ -1,5 +1,6 @@
 package com.example.questapi_071.repositori
 
+import android.app.Application
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,4 +31,21 @@ class DefaultContainerApp : ContainerApp {
         )
         .client(klien)
         .build()
+
+    private val retrofitService : ServiceApiSiswa by lazy {
+        retrofit.create(ServiceApiSiswa::class.java)
+    }
+
+    override val repositoryDataSiswa: RepositoryDataSiswa by lazy {
+        JaringanRepositoryDataSiswa(retrofitService)
+        }
+}
+
+class AplikasiDataSiswa : Application(){
+    lateinit var container : ContainerApp
+    override fun onCreate(){
+        super.onCreate()
+        this.container = DefaultContainerApp()
+    }
+}
 
