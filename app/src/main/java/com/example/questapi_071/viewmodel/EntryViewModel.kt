@@ -11,7 +11,7 @@ import com.example.questapi_071.repositori.RepositoryDataSiswa
 import retrofit2.Response
 
 
-class EntryViewModel (private val repositoryDataSiswa: RepositoryDataSiswa): ViewModel() {
+class EntryViewModel (private val repositoryDataSiswa: RepositoryDataSiswa) : ViewModel(){
     var uiStateSiswa by mutableStateOf(UIStateSiswa())
         private set
 
@@ -22,18 +22,16 @@ class EntryViewModel (private val repositoryDataSiswa: RepositoryDataSiswa): Vie
     }
 
     fun updateUiState(detailSiswa: DetailSiswa){
-        uiStateSiswa =
-            UIStateSiswa(detailSiswa = detailSiswa, isEntryValid = validasiInput(detailSiswa))
+        uiStateSiswa = UIStateSiswa(detailSiswa = detailSiswa, isEntryValid = validasiInput(detailSiswa))
     }
 
     suspend fun addSiswa(){
-        if (validasiInput()) {
-            val sip: Response<Void> = repositoryDataSiswa.postDataSiswa(uiStateSiswa.detailSiswa.toDataSiswa())
-            if (sip.isSuccessful) {
+        if (validasiInput()){
+            val sip: Response<Void> = repositoryDataSiswa.postDatasiswa(uiStateSiswa.detailSiswa.toDataSiswa())
+            if (sip.isSuccessful){
                 println("Sukses Tambah Data : ${sip.message()}")
-            } else {
-                println("Gagal Tambah Data : ${sip.errorBody()}")
-
+            }else {
+                println("Gagal Tambah Data : ${sip.message()}")
             }
         }
     }

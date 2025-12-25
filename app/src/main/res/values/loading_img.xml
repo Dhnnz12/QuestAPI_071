@@ -29,4 +29,5 @@
         <path android:fillColor="#a1a1a5" android:pathData="M32.46,41.98L34.09,39.16" android:strokeWidth="1" android:strokeColor="#909090" android:strokeLineCap="round"/>
         <path android:fillColor="#9d9da0" android:pathData="M29.85,39.4L32.67,37.77" android:strokeWidth="1" android:strokeColor="#7a7a7a" android:strokeLineCap="round"/>
     </vector>
+    <string name="loading_img" />
 </resources>

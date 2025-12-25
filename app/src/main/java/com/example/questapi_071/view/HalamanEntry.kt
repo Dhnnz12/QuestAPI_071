@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -25,27 +26,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.questapi_071.R
 import com.example.questapi_071.modeldata.DetailSiswa
-import com.example.questapi_071.uicontroller.route.DestinasiNavigasi
-import com.example.questapi_071.viewmodel.PenyediaViewModel
+import com.example.questapi_071.modeldata.UIStateSiswa
+import com.example.questapi_071.uicontroller.route.DestinasiEntry
+import com.example.questapi_071.viewmodel.EntryViewModel
+import com.example.questapi_071.viewmodel.provider.PenyediaViewModel
 import kotlinx.coroutines.launch
 
-private val SiswaUiState.detailSiswa: DetailSiswa
-private val SiswaUiState.isEntryValid: Boolean
 
-object DestinasiEntry : DestinasiNavigasi {
-    override val route = "item_entry"
-    override val titleRes = R.string.entry_siswa
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntrySiswaScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: EntrySiswaViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: EntryViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -58,11 +55,11 @@ fun EntrySiswaScreen(
         }
     ) { innerPadding ->
         EntrySiswaBody(
-            siswaUiState = viewModel.siswaUiS,
+            uiStateSiswa = viewModel.uiStateSiswa,
             onSiswaValueChange = viewModel::updateUiState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.saveSiswa()
+                    viewModel.addSiswa()
                     navigateBack()
                 }
             },
@@ -73,26 +70,27 @@ fun EntrySiswaScreen(
         )
     }
 }
-
 @Composable
 fun EntrySiswaBody(
-    siswaUiState: SiswaUiState,
+    uiStateSiswa: UIStateSiswa,
     onSiswaValueChange: (DetailSiswa) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_large)
+        ),
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        FormInputSiswa(
-            detailSiswa = siswaUiState.detailSiswa,
+        FormTambahSiswa(
+            detailSiswa = uiStateSiswa.detailSiswa,
             onValueChange = onSiswaValueChange,
             modifier = Modifier.fillMaxWidth()
         )
         Button(
             onClick = onSaveClick,
-            enabled = siswaUiState.isEntryValid,
+            enabled = uiStateSiswa.isEntryValid,
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -101,9 +99,8 @@ fun EntrySiswaBody(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormInputSiswa(
+fun FormTambahSiswa(
     detailSiswa: DetailSiswa,
     modifier: Modifier = Modifier,
     onValueChange: (DetailSiswa) -> Unit = {},
@@ -111,7 +108,9 @@ fun FormInputSiswa(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_medium)
+        )
     ) {
         OutlinedTextField(
             value = detailSiswa.nama,
@@ -121,6 +120,7 @@ fun FormInputSiswa(
             enabled = enabled,
             singleLine = true
         )
+
         OutlinedTextField(
             value = detailSiswa.alamat,
             onValueChange = { onValueChange(detailSiswa.copy(alamat = it)) },
@@ -129,6 +129,7 @@ fun FormInputSiswa(
             enabled = enabled,
             singleLine = true
         )
+
         OutlinedTextField(
             value = detailSiswa.telpon,
             onValueChange = { onValueChange(detailSiswa.copy(telpon = it)) },
@@ -138,15 +139,21 @@ fun FormInputSiswa(
             enabled = enabled,
             singleLine = true
         )
+
         if (enabled) {
             Text(
                 text = stringResource(R.string.required_field),
-                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+                modifier = Modifier.padding(
+                    start = dimensionResource(id = R.dimen.padding_medium)
+                )
             )
         }
-        Divider(
-            thickness = dimensionResource(R.dimen.padding_small),
-            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_medium))
+
+        HorizontalDivider(
+            thickness = dimensionResource(id = R.dimen.padding_small),
+            modifier = Modifier.padding(
+                bottom = dimensionResource(id = R.dimen.padding_medium)
+            )
         )
     }
 }

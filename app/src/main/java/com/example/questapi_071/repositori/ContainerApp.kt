@@ -12,22 +12,23 @@ import kotlin.getValue
 
 
 
-interface ContainerApp{
+interface ContainerApp {
     val repositoryDataSiswa : RepositoryDataSiswa
 }
 
 class DefaultContainerApp : ContainerApp {
-    private val baseurl = "http://10.0.2.2/umyTI/"
+
+    private val baseurl = "http://10.0.2.2/pam/"
 
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
-    val klien = OkHttpClient.Builder()
-        .addInterceptor (logging )
+
+    val klient = OkHttpClient.Builder()
+        .addInterceptor(logging)
         .build()
 
-
-    private val retrofit: Retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
         .baseUrl(baseurl)
         .addConverterFactory(
             Json {
@@ -36,23 +37,23 @@ class DefaultContainerApp : ContainerApp {
                 isLenient = true
             }.asConverterFactory("application/json".toMediaType())
         )
-        .client(klien)
+        .client(klient)
         .build()
 
-    private val retrofitService : ServiceApiSiswa by lazy {
+    private val retrofitService: ServiceApiSiswa by lazy {
         retrofit.create(ServiceApiSiswa::class.java)
     }
 
     override val repositoryDataSiswa: RepositoryDataSiswa by lazy {
         JaringanRepositoryDataSiswa(retrofitService)
-        }
-}
 
-class AplikasiDataSiswa : Application(){
-    lateinit var container : ContainerApp
-    override fun onCreate(){
-        super.onCreate()
-        this.container = DefaultContainerApp()
     }
 }
 
+class AplikasiDataSiswa : Application(){
+    lateinit var containerApp: ContainerApp
+    override fun onCreate() {
+        super.onCreate()
+        containerApp = DefaultContainerApp()
+    }
+}
