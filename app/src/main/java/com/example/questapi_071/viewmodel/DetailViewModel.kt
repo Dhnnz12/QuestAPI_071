@@ -15,6 +15,8 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface StatusUIDetail {
+    val satuSiswa: DataSiswa
+
     data class Success(val satusiswa: DataSiswa) : StatusUIDetail
     object Error : StatusUIDetail
     object Loading : StatusUIDetail
