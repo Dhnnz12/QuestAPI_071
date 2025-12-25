@@ -38,7 +38,7 @@ import com.example.questapi_071.R
 import com.example.questapi_071.modeldata.DataSiswa
 import com.example.questapi_071.uicontroller.route.DestinasiDetail
 import com.example.questapi_071.viewmodel.DetailViewModel
-import com.example.questapi_071.viewmodel.StatusUIDetail
+import com.example.questapi_071.viewmodel.StatusUiDetail
 import com.example.questapi_071.viewmodel.provider.PenyediaViewModel
 import kotlinx.coroutines.launch
 
@@ -59,10 +59,10 @@ fun DetailSiswaScreen(
             )
         },
         floatingActionButton = {
-            val uiState = viewModel.statusUIDetail
+            val uiState = viewModel.statusUiDetail
             FloatingActionButton(
                 onClick = {
-                    when(uiState){is StatusUIDetail.Success ->
+                    when(uiState){is StatusUiDetail.Success ->
                         navigateToEditItem(uiState.satuSiswa.id) else->{}}
                 },
                 shape = MaterialTheme.shapes.medium,
@@ -75,7 +75,7 @@ fun DetailSiswaScreen(
     ) { innerPadding ->
         val coroutineScope = rememberCoroutineScope()
         BodyDetailDataSiswa(
-            statusUiDetail = viewModel.statusUIDetail,
+            statusUiDetail = viewModel.statusUiDetail,
             onDelete = {coroutineScope.launch {
                 viewModel.hapusSatuSiswa()
                 navigateBack()
@@ -89,7 +89,7 @@ fun DetailSiswaScreen(
 
 @Composable
 private fun BodyDetailDataSiswa(
-    statusUiDetail: StatusUIDetail,
+    statusUiDetail: StatusUiDetail,
     onDelete:() -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -97,7 +97,7 @@ private fun BodyDetailDataSiswa(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         when(statusUiDetail){
-            is StatusUIDetail.Success -> DetailDataSiswa(
+            is StatusUiDetail.Success -> DetailDataSiswa(
                 siswa = statusUiDetail.satuSiswa,
                 modifier = Modifier.fillMaxWidth()
             ) else->{}
